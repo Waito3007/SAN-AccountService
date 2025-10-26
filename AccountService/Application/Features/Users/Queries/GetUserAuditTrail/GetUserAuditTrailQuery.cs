@@ -7,7 +7,7 @@ namespace AccountService.Application.Features.Users.Queries.GetUserAuditTrail;
 /// <summary>
 /// Query để lấy audit trail của user
 /// </summary>
-public class GetUserAuditTrailQuery : IRequest<Result<List<AuditLogDto>>>
+public class GetUserAuditTrailQuery : IRequest<ServiceResponse<PaginatedList<AuditLogDto>>>
 {
     public Guid UserId { get; set; }
     public int PageNumber { get; set; } = 1;

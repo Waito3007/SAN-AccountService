@@ -1,26 +1,51 @@
+using AccountService.Application;
+using AccountService.Extensions;
+using AccountService.Infrastructure;
+using AccountService.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddAuthorizationPolicies();
+builder.Services.AddCustomMiddlewares();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseMigration");
+
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw;
+    }
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseAuthorization();
-app.UseRouting();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.MapFallbackToFile("index.html");
+app.UseCustomExceptionHandler();
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
+
