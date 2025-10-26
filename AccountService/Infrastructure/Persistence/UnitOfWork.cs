@@ -14,6 +14,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
     private IDbContextTransaction? _transaction;
+    private readonly Dictionary<Type, object> _genericRepositoryList = new();
 
     // Lazy initialization cho repositories
     private IUserRepository? _users;
@@ -95,6 +96,24 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
+    public IGenericRepository<T> Repository<T>() where T : class
+    {
+        var key = typeof(T);
+        if (_genericRepositoryList.ContainsKey(key))
+        {
+            return (IGenericRepository<T>)_genericRepositoryList[key];
+        }
+        else
+        {
+            var repository = new GenericRepository<T>(_context);
+            _genericRepositoryList.Add(key, repository);
+            return repository;
+        }
+
+
+    }
+
+
     /// <summary>
     /// Dispose resources
     /// </summary>
@@ -104,4 +123,6 @@ public class UnitOfWork : IUnitOfWork
         _context?.Dispose();
         GC.SuppressFinalize(this);
     }
+
+
 }
