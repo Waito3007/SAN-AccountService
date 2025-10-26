@@ -1,4 +1,4 @@
-﻿namespace AccountService.Application.Common.Constants;
+﻿﻿namespace AccountService.Application.Common.Constants;
 
 /// <summary>
 /// Tập trung tất cả các thông báo lỗi trong hệ thống
@@ -37,6 +37,7 @@ public static class ErrorMessages
     #endregion
 
     #region Validation Errors
+    public const string InvalidData = "Dữ liệu không hợp lệ.";
     public const string InvalidEmail = "Email không hợp lệ.";
     public const string InvalidPhoneNumber = "Số điện thoại không hợp lệ.";
     public const string InvalidPassword = "Mật khẩu không đáp ứng yêu cầu.";

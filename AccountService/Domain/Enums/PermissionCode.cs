@@ -7,37 +7,31 @@
 public enum PermissionCode
 {
     // User Management Permissions
-    ReadUser = 1,
-    CreateUser = 2,
-    UpdateUser = 3,
-    SoftDeleteUser = 4,
-    RestoreUser = 5,
-    ActivateUser = 6,
-    DeactivateUser = 7,
-    LockUser = 8,
-    UnlockUser = 9,
+    UserRead = 1,
+    UserCreate = 2,
+    UserUpdate = 3,
+    UserDelete = 4,
+    UserRestore = 5,
+    UserLock = 8,
+    UserPasswordReset = 10,
 
     // Role Management Permissions
-    ReadRole = 20,
-    CreateRole = 21,
-    UpdateRole = 22,
-    DeleteRole = 23,
-    AssignRoleToUser = 24,
-    RemoveRoleFromUser = 25,
+    RoleRead = 20,
+    RoleCreate = 21,
+    RoleUpdate = 22,
+    RoleDelete = 23,
+    RoleAssign = 24,
 
     // Permission Management
-    ReadPermission = 40,
-    AssignPermissionsToRole = 41,
-    RemovePermissionsFromRole = 42,
+    PermissionRead = 40,
+    PermissionAssign = 41,
 
     // Audit Permissions
-    ReadAuditLog = 60,
-    ReadUserAuditTrail = 61,
+    AuditRead = 60,
 
     // Profile Permissions
-    ReadOwnProfile = 80,
-    UpdateOwnProfile = 81,
-    ReadAnyProfile = 82,
-    UpdateAnyProfile = 83
+    ProfileRead = 80,
+    ProfileUpdate = 81
 }
+
 
