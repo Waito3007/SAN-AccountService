@@ -22,6 +22,8 @@ public class AuditLogRepository : GenericRepository<AuditLog>, IAuditLogReposito
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
+            .AsNoTracking()
+            .Include(al => al.Actor)
             .Where(al => al.TargetUserId == userId)
             .OrderByDescending(al => al.CreatedAt);
 
@@ -42,6 +44,8 @@ public class AuditLogRepository : GenericRepository<AuditLog>, IAuditLogReposito
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
+            .AsNoTracking()
+            .Include(al => al.Actor)
             .Where(al => al.ActorUserId == actorId)
             .OrderByDescending(al => al.CreatedAt);
 
@@ -60,6 +64,7 @@ public class AuditLogRepository : GenericRepository<AuditLog>, IAuditLogReposito
         CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .AsNoTracking()
             .Where(al => al.Action == action)
             .OrderByDescending(al => al.CreatedAt)
             .ToListAsync(cancellationToken);
@@ -71,6 +76,7 @@ public class AuditLogRepository : GenericRepository<AuditLog>, IAuditLogReposito
         CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .AsNoTracking()
             .Where(al => al.CreatedAt >= startDate && al.CreatedAt <= endDate)
             .OrderByDescending(al => al.CreatedAt)
             .ToListAsync(cancellationToken);

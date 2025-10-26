@@ -1,10 +1,12 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace AccountService.Middlewares;
 
 /// <summary>
-/// Middleware xử lý exception toàn cục
+/// Middleware xử lý exception toàn cục.
 /// </summary>
 public class ExceptionHandlingMiddleware
 {
@@ -52,3 +54,4 @@ public class ExceptionHandlingMiddleware
         return context.Response.WriteAsync(JsonSerializer.Serialize(response, jsonOptions));
     }
 }
+

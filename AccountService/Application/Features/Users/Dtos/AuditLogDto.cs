@@ -1,21 +1,10 @@
-﻿using MediatR;
-using AccountService.Application.Common.Models;
+using System;
 using AccountService.Domain.Enums;
 
-namespace AccountService.Application.Features.Users.Queries.GetUserAuditTrail;
+namespace AccountService.Application.Features.Users.Dtos;
 
 /// <summary>
-/// Query để lấy audit trail của user
-/// </summary>
-public class GetUserAuditTrailQuery : IRequest<Result<List<AuditLogDto>>>
-{
-    public Guid UserId { get; set; }
-    public int PageNumber { get; set; } = 1;
-    public int PageSize { get; set; } = 20;
-}
-
-/// <summary>
-/// DTO cho Audit Log
+/// DTO đại diện cho bản ghi audit của người dùng.
 /// </summary>
 public class AuditLogDto
 {
@@ -29,4 +18,3 @@ public class AuditLogDto
     public string? Metadata { get; set; }
     public DateTime CreatedAt { get; set; }
 }
-

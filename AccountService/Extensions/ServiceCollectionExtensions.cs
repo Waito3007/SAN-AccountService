@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
 using AccountService.Application.Common.Authorization;
 using AccountService.Authorization;
 using AccountService.Middlewares;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AccountService.Extensions;
 
 /// <summary>
-/// Extension methods cho cấu hình services
+/// Extension methods cho cấu hình services.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
@@ -14,11 +15,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddAuthorization(options =>
         {
-            // Đăng ký tất cả permission policies
             options.RegisterPermissionPolicies();
         });
 
-        // Đăng ký Authorization Handler
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         return services;
@@ -26,9 +25,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomMiddlewares(this IServiceCollection services)
     {
-        // Đăng ký các services cần thiết cho middleware
         services.AddHttpContextAccessor();
-        
+
         return services;
     }
 }

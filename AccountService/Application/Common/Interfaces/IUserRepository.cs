@@ -13,6 +13,7 @@ public interface IUserRepository : IGenericRepository<User>
     Task<User?> GetUserWithProfileAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<User?> GetUserWithRolesAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<User?> GetUserWithPermissionsAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<User?> GetUserDetailAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<PaginatedList<User>> GetUsersWithPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
     Task<IEnumerable<User>> GetActiveUsersAsync(CancellationToken cancellationToken = default);
     Task<IEnumerable<User>> GetDeletedUsersAsync(CancellationToken cancellationToken = default);

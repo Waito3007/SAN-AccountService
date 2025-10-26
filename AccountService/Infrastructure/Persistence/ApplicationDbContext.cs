@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AccountService.Domain.Entities;
-using AccountService.Domain.Common;
+using System.Linq.Expressions;
 using System.Reflection;
+using AccountService.Domain.Common;
+using AccountService.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountService.Infrastructure.Persistence;
 
 /// <summary>
-/// Application Database Context
+/// Application Database Context.
 /// </summary>
 public class ApplicationDbContext : DbContext
 {
@@ -14,7 +15,6 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    // DbSets
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
@@ -28,31 +28,25 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Áp dụng tất cả configurations từ assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Global Query Filter cho Soft Delete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
             {
-                // Tạo expression: entity => !entity.IsDeleted
-                var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "entity");
-                var property = System.Linq.Expressions.Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
-                var filter = System.Linq.Expressions.Expression.Lambda(
-                    System.Linq.Expressions.Expression.Not(property), 
-                    parameter
-                );
+                var parameter = Expression.Parameter(entityType.ClrType, "entity");
+                var property = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
+                var condition = Expression.Equal(property, Expression.Constant(false));
+                var lambda = Expression.Lambda(condition, parameter);
 
-                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
             }
         }
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        // Interceptor sẽ tự động xử lý AuditableEntity và SoftDelete
-        return await base.SaveChangesAsync(cancellationToken);
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
 

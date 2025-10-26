@@ -1,13 +1,16 @@
-﻿namespace AccountService.Extensions;
+using AccountService.Middlewares;
+using Microsoft.AspNetCore.Builder;
+
+namespace AccountService.Extensions;
 
 /// <summary>
-/// Extension methods cho cấu hình application pipeline
+/// Extension methods cho cấu hình application pipeline.
 /// </summary>
 public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder app)
     {
-        app.UseMiddleware<Middlewares.ExceptionHandlingMiddleware>();
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         return app;
     }
 }

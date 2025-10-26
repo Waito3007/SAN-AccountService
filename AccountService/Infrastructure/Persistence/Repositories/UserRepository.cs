@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using AccountService.Application.Common.Interfaces;
 using AccountService.Application.Common.Models;
 using AccountService.Domain.Entities;
@@ -52,13 +53,24 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
 
+    public async Task<User?> GetUserDetailAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(u => u.Profile)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+    }
+
     public async Task<PaginatedList<User>> GetUsersWithPaginationAsync(
-        int pageNumber, 
-        int pageSize, 
+        int pageNumber,
+        int pageSize,
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
             .Include(u => u.Profile)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
             .OrderBy(u => u.Username);
 
         var totalCount = await query.CountAsync(cancellationToken);
