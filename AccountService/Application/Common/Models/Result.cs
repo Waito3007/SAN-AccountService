@@ -6,6 +6,7 @@
 public class Result
 {
     public bool Succeeded { get; set; }
+    public bool IsSuccess => Succeeded;
     public string? Message { get; set; }
     public List<string> Errors { get; set; } = new();
 
